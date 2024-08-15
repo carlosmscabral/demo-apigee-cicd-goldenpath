@@ -1,0 +1,65 @@
+APIProxy:
+  .revision: 1
+  .name: {{ $.Values.apiName }}
+  DisplayName: {{ $.Values.spec.info.title }}
+  Description: {{ $.Values.spec.info.description }}
+Policies:
+  $ref: ./policies.yaml#/
+ProxyEndpoints:
+  - ProxyEndpoint:
+      .name: default
+      Description: {}
+      FaultRules: {}
+      PreFlow:
+        .name: PreFlow
+        Request:
+          Step:
+            Name: FC-log-set-values-v1
+        Response: {}
+      Flows:
+      #{{- range $path, $pathItem := $.Values.spec.paths }}
+        #{{- range $verb, $opItem := $pathItem }}
+        - Flow:
+            .name: {{ $opItem.operationId }}
+            Condition: (proxy.pathsuffix MatchesPath "{{  regexReplaceAll "{[^}]*}" $path "*" }}") and (request.verb = "{{ $verb | upper }}")
+        #{{- end }}
+      #{{- end }}
+      PostFlow:
+        .name: PostFlow
+        Request: {}
+        Response:
+          Step:
+            Name: FC-log-set-values-v1
+      PostClientFlow:
+        Response:
+          Step:
+            Name: SC-log-cloud-logging
+      HTTPProxyConnection:
+        BasePath: {{ $.Values.basepath }}
+        Properties: {}
+        VirtualHost: default
+      RouteRule:
+        .name: default
+        TargetEndpoint: default
+TargetEndpoints:
+  - TargetEndpoint:
+      .name: default
+      Description: {}
+      FaultRules: {}
+      PreFlow:
+        .name: PreFlow
+        Request: {}
+        Response:
+          Step:
+            Name: FC-log-set-values-v1
+      PostFlow:
+        .name: PostFlow
+        Request:
+          Step:
+            Name: FC-log-set-values-v1
+        Response: {}
+      Flows: {}
+      HTTPTargetConnection:
+        Properties: {}
+        URL: https://httpbin.org/get
+Resources: []

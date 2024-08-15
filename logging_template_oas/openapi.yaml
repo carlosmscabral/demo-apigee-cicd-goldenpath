@@ -1,0 +1,440 @@
+openapi: 3.0.0
+info:
+  title: Facial Recognition API
+  description: This API provides functionality for facial recognition.
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://petstore.swagger.io/v1/facial-recog
+paths:
+  /entities:
+    get:
+      description: List all entities.
+      operationId: listEntities
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error
+      security:
+        - api_key: []
+      tags:
+        - entities
+    post:
+      description: Creates a new entity.
+      operationId: createEntity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: Entity created successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+      security:
+        - api_key: []
+      summary: Create a new entity.
+      tags:
+        - entities
+  /entities/{entity}:
+    delete:
+      description: Delete a specific entity.
+      operationId: deleteEntity
+      responses:
+        '200':
+          description: Entity deleted successfully.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Entity not found.
+      security:
+        - api_key: []
+      tags:
+        - entities
+    get:
+      description: Get the details of a specific entity.
+      operationId: getEntity
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - entities
+      parameters:
+        - description: The unique identifier for the entity.
+          in: path
+          name: entity
+          required: true
+          schema:
+            type: string
+    put:
+      description: Update the details of a specific entity.
+      operationId: updateEntity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entity'
+      responses:
+        '200':
+          description: The entity was updated successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: The request was invalid.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: The entity was not found.
+      security:
+        - api_key: []
+      tags:
+        - entities
+  /entities/{entity}/faces:
+    get:
+      description: List all faces associated with a specific entity.
+      operationId: getFacesByEntity
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - entities
+      parameters:
+        - description: The unique identifier for the entity.
+          in: path
+          name: entity
+          required: true
+          schema:
+            type: string
+    post:
+      description: Creates a new face associated with a specific entity.
+      operationId: createFace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Face'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: Face created successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Entity not found.
+      security:
+        - api_key: []
+      summary: Create a new face associated with a specific entity.
+      tags:
+        - entities
+  /entities/{entity}/faces/{face}:
+    delete:
+      description: Delete a specific face associated with a specific entity.
+      operationId: deleteEntityFace
+      parameters:
+        - description: The face ID.
+          in: path
+          name: face
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      summary: Delete a specific face associated with a specific entity.
+      tags:
+        - faces
+    get:
+      description: Get the details of a specific face associated with a specific entity.
+      operationId: getFace
+      parameters:
+        - description: The face to get.
+          in: path
+          name: face
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - faces
+    put:
+      description: >-
+        Updates the details of a specific face associated with a specific
+        entity.
+      operationId: updateFace
+      parameters:
+        - description: The face to update.
+          in: path
+          name: face
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Face'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      summary: Update the details of a specific face associated with a specific entity.
+      tags:
+        - faces
+  /faces:
+    get:
+      description: List all faces.
+      operationId: listFaces
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+      security:
+        - api_key: []
+      tags:
+        - faces
+    post:
+      description: Create a new face.
+      operationId: createFace2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Face'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: Face created successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad request.
+      security:
+        - api_key: []
+      tags:
+        - faces
+  /faces/{face}:
+    delete:
+      description: Delete a specific face.
+      operationId: deleteFace
+      responses:
+        '200':
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - faces
+    get:
+      description: Get the details of a specific face.
+      operationId: getFace1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - faces
+      parameters:
+        - description: The unique identifier for the face.
+          in: path
+          name: face
+          required: true
+          schema:
+            type: string
+    put:
+      description: Update the details of a specific face.
+      operationId: updateFace1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Face'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Face'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Not Found
+      security:
+        - api_key: []
+      tags:
+        - faces
+components:
+  schemas:
+    Entity:
+      description: >-
+        An entity represents a person or object that can be recognized by the
+        facial recognition system.
+      properties:
+        id:
+          description: Unique identifier for the entity.
+          type: string
+        name:
+          description: Name of the entity.
+          type: string
+      required:
+        - id
+        - name
+      type: object
+    Face:
+      description: A face.
+      properties:
+        id:
+          description: Unique identifier for the face.
+          type: string
+        image:
+          description: Image of the face.
+          type: string
+      required:
+        - id
+        - image
+      type: object
+    error:
+      description: Error object
+      properties:
+        code:
+          description: The error code
+          type: string
+        message:
+          description: The error message
+          type: string
+      type: object
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

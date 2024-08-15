@@ -1,0 +1,68 @@
+APIProxy:
+  .revision: 2
+  .name: template-source-v2
+  DisplayName: {}
+  Description: {}
+  CreatedAt: 1723719532112
+  LastModifiedAt: 1723719685854
+  BasePaths: /template-source-v2
+  Policies:
+    - Policy: SC-log-cloud-logging
+    - Policy: FC-log-set-values-v1
+  ProxyEndpoints:
+    ProxyEndpoint: default
+  TargetEndpoints:
+    TargetEndpoint: default
+Policies:
+  $ref: ./policies.yaml#/
+ProxyEndpoints:
+  - ProxyEndpoint:
+      .name: default
+      Description: {}
+      FaultRules: {}
+      PreFlow:
+        .name: PreFlow
+        Request:
+          Step:
+            Name: FC-log-set-values-v1
+        Response: {}
+      PostFlow:
+        .name: PostFlow
+        Request: {}
+        Response:
+          Step:
+            Name: FC-log-set-values-v1
+      PostClientFlow:
+        Response:
+          Step:
+            Name: SC-log-cloud-logging
+      Flows: {}
+      HTTPProxyConnection:
+        BasePath: /template-source-v2
+        Properties: {}
+        VirtualHost: default
+      RouteRule:
+        .name: default
+        TargetEndpoint: default
+TargetEndpoints:
+  - TargetEndpoint:
+      .name: default
+      Description: {}
+      FaultRules: {}
+      PreFlow:
+        .name: PreFlow
+        Request: {}
+        Response:
+          Step:
+            Name: FC-log-set-values-v1
+      PostFlow:
+        .name: PostFlow
+        Request:
+          Step:
+            Name: FC-log-set-values-v1
+        Response: {}
+      Flows: {}
+      HTTPTargetConnection:
+        Properties: {}
+        URL: https://httpbin.org/get
+Resources: []

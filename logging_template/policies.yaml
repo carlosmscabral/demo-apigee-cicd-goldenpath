@@ -1,0 +1,46 @@
+---
+- FlowCallout:
+      .continueOnError: false
+      .enabled: true
+      .name: FC-log-set-values-v1
+      Parameters:
+        Parameter:
+          .name: currentstep.flowstate
+          -Data: '{currentstep.flowstate}'
+      SharedFlowBundle: log-set-values-v1
+- ServiceCallout:
+      .name: SC-log-cloud-logging
+      Request:
+        IgnoreUnresolvedVariables: false
+        Set:
+          Verb: POST
+          Payload:
+            .contentType: application/json
+            -Data: |-
+              {
+                              "logName": "projects/{organization.name}/logs/apigee-proxy-logging-sc",
+                              "resource": {
+                                  "type": "global",
+                                  "labels": {
+                                      "project_id": "{organization.name}"
+                                  }
+                              },
+                              "labels": {
+                                  "label_environment_name": "{environment.name}",
+                                  "label_apiproxy_name": "{apiproxy.name}",
+                                  "label_apiproxy_revision": "{apiproxy.revision}"
+                              },
+                              "entries": [
+                                  {
+                                      "severity": "{logging_level}",
+                                      "jsonPayload": {logging_message}
+                                  }
+                              ],
+                              "partialSuccess": true
+                          }
+      HTTPTargetConnection:
+        URL: https://logging.googleapis.com/v2/entries:write
+        Authentication:
+          GoogleAccessToken:
+            Scopes:
+              Scope: https://www.googleapis.com/auth/logging.write
