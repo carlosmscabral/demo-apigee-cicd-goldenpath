@@ -1,11 +1,11 @@
 APIProxy:
   .revision: 2
-  .name: template-source-v2
+  .name: unico-v2
   DisplayName: {}
   Description: {}
   CreatedAt: 1723719532112
   LastModifiedAt: 1723719685854
-  BasePaths: /template-source-v2
+  BasePaths: /unico-v2
   Policies:
     - Policy: SC-log-cloud-logging
     - Policy: FC-log-set-values-v1
@@ -38,7 +38,7 @@ ProxyEndpoints:
             Name: SC-log-cloud-logging
       Flows: {}
       HTTPProxyConnection:
-        BasePath: /template-source-v2
+        BasePath: /unico-v2
         Properties: {}
         VirtualHost: default
       RouteRule:
